@@ -28,5 +28,8 @@ app.MapControllers();
 
 app.Run();
 
+// dotnet ef add migration AddMigration
+// dotnet ef update database
 
-//
+// dotnet ef migrations add InitialCreate --context ApplicationDbContext
+// dotnet ef database update --context ApplicationDbContext
