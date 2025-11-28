@@ -86,7 +86,7 @@ namespace ApiEcommerce.Migrations
 
                     b.Property<string>("Username")
                     .IsRequired()
-                    .HasColumnType("nvarchar(max)");
+                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
