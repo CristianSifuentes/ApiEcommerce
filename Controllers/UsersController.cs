@@ -3,7 +3,6 @@ using ApiEcommerce.Repository.IRepository;
 using Asp.Versioning;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiEcommerce.Controllers
@@ -33,12 +32,12 @@ namespace ApiEcommerce.Controllers
       return Ok(usersDto);
     }
 
-    [HttpGet("{id:int}", Name = "GetUser")]
+    [HttpGet("{id}", Name = "GetUser")]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult GetUser(int id)
+    public IActionResult GetUser(string id)
     {
       var user = _userRepository.GetUser(id);
       if (user == null)
