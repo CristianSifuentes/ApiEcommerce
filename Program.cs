@@ -26,19 +26,48 @@ builder.Services.AddResponseCaching(options =>
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+// Esta linea agrega el servicio de AutoMapper
+// AutoMapper busca en el ensamblado actual (donde se encuentra la clase Program) los perfiles de mapeo
+// y los registra automaticamente
+// De esta forma, no es necesario registrar cada perfil de mapeo manualmente
+// Solo debemos crear las clases que hereden de Profile y definir los mapeos
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
+// En esta parte configuramos Identity
+// Identity usa por defecto la tabla AspNetUsers para los usuarios
+// y AspNetRoles para los roles
+// Si queremos usar una tabla diferente, debemos crear una clase que herede de IdentityUser
+// y otra que herede de IdentityRole
+// y luego configurar Identity para que use esas clases
+// En este caso, ApplicationUser hereda de IdentityUser
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
+// Configuramos la autenticacion con JWT
+// Leemos la clave secreta desde appsettings.json
+// y la usamos para validar los tokens
 var secretKey = builder.Configuration.GetValue<string>("ApiSettings:SecretKey");
 if (string.IsNullOrEmpty(secretKey))
 {
   throw new InvalidOperationException("SecretKey no esta configurada");
 }
+// Configuramos el esquema de autenticacion
+// Usamos JWT Bearer
+// Configuramos los parametros de validacion del token
+// como la clave secreta, el emisor y el publico
+// En este caso, no validamos el emisor ni el publico
 builder.Services.AddAuthentication(options =>
 {
+  // Configuramos el esquema por defecto de autenticacion
+  // y el esquema por defecto de desafio
+  // Ambos son JWT Bearer
+  // ¿Que es esquema por defecto?
+  // Esquema que se usa cuando no se especifica uno
+  // en el atributo [Authorize] o en la llamada a HttpContext.AuthenticateAsync()
+  // ¿Que es esquema por defecto de desafio?
+  // Esquema que se usa cuando se requiere autenticacion
+  // y no se proporciona un token valido
   options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
