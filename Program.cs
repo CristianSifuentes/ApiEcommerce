@@ -63,6 +63,7 @@ builder.Services.AddControllers(option =>
 );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(
   options =>
   {
@@ -129,20 +130,31 @@ builder.Services.AddSwaggerGen(
     });
   }
 );
+
 var apiVersioningBuilder = builder.Services.AddApiVersioning(option =>
 {
+  //AssumeDefaultVersionWhenUnspecified = true: Si el cliente no especifica una versión, se usará la versión por defecto.
+  // DefaultApiVersion = new ApiVersion(1, 0): Establece la versión por defecto de la API a la 1.0.
+  // ReportApiVersions = true: Incluye en las respuestas de la API los encabezados
   option.AssumeDefaultVersionWhenUnspecified = true;
   option.DefaultApiVersion = new ApiVersion(1, 0);
   option.ReportApiVersions = true;
   // option.ApiVersionReader = ApiVersionReader.Combine(new QueryStringApiVersionReader("api-version")); //?api-version
 });
+
 apiVersioningBuilder.AddApiExplorer(option =>
 {
+  //GroupNameFormat: Define el formato del nombre de la versión en la URL.
+  //SubstituteApiVersionInUrl: Sustituye la versión en la URL de los
   option.GroupNameFormat = "'v'VVV"; // v1,v2,v3...
   option.SubstituteApiVersionInUrl = true; // api/v{version}/products
 });
 builder.Services.AddCors(options =>
   {
+    // Define una política de CORS llamada "AllowSpecificOrigin" que permite solicitudes desde cualquier origen.
+    // Esto es útil para permitir el acceso a la API desde diferentes dominios durante el desarrollo o en producción.
+    // La política permite cualquier método HTTP y cualquier encabezado en las solicitudes.
+    // Puedes ajustar los orígenes permitidos según tus necesidades de seguridad.
     options.AddPolicy(PolicyNames.AllowSpecificOrigin,
     builder =>
     {
