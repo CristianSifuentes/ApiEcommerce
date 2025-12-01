@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.VisualBasic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,9 +31,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 // AutoMapper busca en el ensamblado actual (donde se encuentra la clase Program) los perfiles de mapeo
 // y los registra automaticamente
 // De esta forma, no es necesario registrar cada perfil de mapeo manualmente
-// Solo debemos crear las clases que hereden de Profile y definir los mapeos
+// Solo debemos crear las clases que hereden de Profile y definir los mapeos en ellas
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
 // En esta parte configuramos Identity
 // Identity usa por defecto la tabla AspNetUsers para los usuarios
 // y AspNetRoles para los roles
@@ -52,6 +52,7 @@ if (string.IsNullOrEmpty(secretKey))
 {
   throw new InvalidOperationException("SecretKey no esta configurada");
 }
+
 // Configuramos el esquema de autenticacion
 // Usamos JWT Bearer
 // Configuramos los parametros de validacion del token
@@ -92,6 +93,7 @@ builder.Services.AddControllers(option =>
 );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(
   options =>
   {
@@ -160,6 +162,10 @@ builder.Services.AddSwaggerGen(
 );
 var apiVersioningBuilder = builder.Services.AddApiVersioning(option =>
 {
+
+  //AssumeDefaultVersionWhenUnspecified = true: Si el cliente no especifica una versión, se usará la versión por defecto.
+  // DefaultApiVersion = new ApiVersion(1, 0): Establece la versión por defecto de la API a la 1.0.
+  // ReportApiVersions = true: Incluye en las respuestas de la API los encabezados 
   option.AssumeDefaultVersionWhenUnspecified = true;
   option.DefaultApiVersion = new ApiVersion(1, 0);
   option.ReportApiVersions = true;
@@ -167,11 +173,17 @@ var apiVersioningBuilder = builder.Services.AddApiVersioning(option =>
 });
 apiVersioningBuilder.AddApiExplorer(option =>
 {
+    //GroupNameFormat: Define el formato del nombre de la versión en la URL.
+  //SubstituteApiVersionInUrl: Sustituye la versión en la URL de los
   option.GroupNameFormat = "'v'VVV"; // v1,v2,v3...
   option.SubstituteApiVersionInUrl = true; // api/v{version}/products
 });
 builder.Services.AddCors(options =>
   {
+        // Define una política de CORS llamada "AllowSpecificOrigin" que permite solicitudes desde cualquier origen.
+    // Esto es útil para permitir el acceso a la API desde diferentes dominios durante el desarrollo o en producción.
+    // La política permite cualquier método HTTP y cualquier encabezado en las solicitudes.
+    // Puedes ajustar los orígenes permitidos según tus necesidades de seguridad.
     options.AddPolicy(PolicyNames.AllowSpecificOrigin,
     builder =>
     {
@@ -193,6 +205,8 @@ if (app.Environment.IsDevelopment())
     options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
   });
 }
+
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 
