@@ -1,7 +1,6 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36717.8 d17.14
+VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiEcommerce", "ApiEcommerce.csproj", "{9718C90A-875D-BB19-0555-F4E7C2F9EF68}"
 EndProject
@@ -20,6 +19,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {193C387C-9023-496D-8F7C-DB418DDC6684}
+		SolutionGuid = {1DA6BBBE-DC1E-496E-823D-1CA7A6F1C55E}
 	EndGlobalSection
 EndGlobal
