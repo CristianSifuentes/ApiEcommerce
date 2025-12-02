@@ -1,4 +1,3 @@
-using System;
 using ApiEcommerce.Models;
 using ApiEcommerce.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
@@ -71,6 +70,17 @@ public class ProductRepository : IProductRepository
       return new List<Product>();
     }
     return _db.Products.Include(p => p.Category).Where(p => p.CategoryId == categoryId).OrderBy(p => p.Name).ToList();
+  }
+
+  public ICollection<Product> GetProductsInPages(int pageNumber, int pageSize)
+  {
+    return _db.Products.OrderBy(p => p.ProductId)
+    .Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+  }
+
+  public int GetTotalProducts()
+  {
+    return _db.Products.Count();
   }
 
   public bool ProductExists(int id)
